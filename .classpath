@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="lib" path="D:/Ecplise/Project/JsoupCrawler/library/jsoup-1.8.3.jar"/>
+	<classpathentry kind="lib" path="D:/Ecplise/Project/JsoupCrawler/library/sqljdbc4.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
