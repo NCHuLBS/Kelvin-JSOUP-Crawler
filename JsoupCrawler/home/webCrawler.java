@@ -23,9 +23,25 @@ public class webCrawler {
 	 */
 	public void CrawlerGetHtml(List<String> resolveUrls) throws Exception {
 		for (String resolveUrl : resolveUrls) {
-			if (resolveUrl.indexOf("travel.taichung") > 0) {
-				travelTaichungService.AnalysisTravelTaichung(resolveUrl);
-			}
+			final String url = resolveUrl;
+			Thread thread = new Thread() {
+				public void run() {
+					try {
+						System.out.println("執行緒:" + Thread.currentThread().getName());
+						System.out.println("開始");
+						if (url.indexOf("travel.taichung") > 0) {
+							travelTaichungService.AnalysisTravelTaichung(url);
+						}
+						System.out.println("執行緒:" + Thread.currentThread().getName());
+						System.out.println("結束");
+					} catch (Exception e) {
+						System.out.println("執行緒:" + Thread.currentThread().getName());
+						System.out.println(e.toString());
+					}
+				}
+			};
+			thread.setName(resolveUrl);
+			thread.start();
 		}
 	}
 

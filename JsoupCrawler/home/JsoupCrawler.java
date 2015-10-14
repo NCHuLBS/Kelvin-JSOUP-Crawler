@@ -22,5 +22,6 @@ public class JsoupCrawler {
 
 	private static void AddResolveUrls() {
 		resolveUrls.add("http://travel.taichung.gov.tw/zh-tw/Event/News");// 臺中觀光旅遊網--最新消息
+//		resolveUrls.add("http://travel.taichung.gov.tw/zh-tw/Event/News?page=17");// 臺中觀光旅遊網--最新消息
 	}
 }

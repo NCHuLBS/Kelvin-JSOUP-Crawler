@@ -30,14 +30,23 @@ public class travelTaichungService {
 		if (firstIsExists) {
 			return;
 		}
-//		for (Element element : linkAs) {
-//			try {
-//				AnalysisTravelTaichungNewsDetail(element.absUrl("href"));
-//			} catch (Exception e) {
-//				System.out.println(e.toString());
-//				continue;
-//			}
-//		}
+		for (Element element : linkAs) {
+			try {
+				if(travelTaichungService.CheckHtmlIsExist(element.absUrl("href"))){
+					continue;
+				}
+				AnalysisTravelTaichungNewsDetail(element.absUrl("href"));
+			} catch (Exception e) {
+				System.out.println(e.toString());
+				continue;
+			}
+		}
+		
+		Element nextPage = xmlDoc.select("div.page-bar").select("span.next-blk").select("a").first();
+		if(nextPage.attr("href").toString().trim() != ""){
+			System.out.println("還有下一頁");
+			AnalysisTravelTaichung(nextPage.absUrl("href"));
+		}
 	}
 
 	/**
@@ -52,23 +61,22 @@ public class travelTaichungService {
 		URL url = new URL(resolveUrl);
 		Document xmlDoc = Jsoup.parse(url, 5000);
 		String title = xmlDoc.select("h2.page-name").text();
-		System.out.println(title);
-
-		StringBuilder sqlCommand = new StringBuilder("INSERT INTO UnstructuredData ( DataUrl ,DataTitle"
-				+ ",HtmlSource ) VALUES ( ? ,? ,? )");
+		StringBuilder sqlCommand = new StringBuilder(
+				"INSERT INTO UnstructuredData ( DataUrl ,DataTitle" + ",HtmlSource ) VALUES ( ? ,? ,? )");
 		ArrayList<sqlParameterViewModels> sqlParameters = new ArrayList<sqlParameterViewModels>();
 		sqlParameters.add(new sqlParameterViewModels("String", resolveUrl));
 		sqlParameters.add(new sqlParameterViewModels("String", title));
 		sqlParameters.add(new sqlParameterViewModels("String", xmlDoc.html()));
-		new dbService().deServiceGetResultSet(sqlCommand.toString(), sqlParameters);
+		new dbService().deServiceExecute(sqlCommand.toString(), sqlParameters);
+		System.out.println(title);
+		System.out.println(resolveUrl);
 	}
 
 	private static boolean CheckHtmlIsExist(String resolveUrl) throws Exception {
 		StringBuilder sqlCommand = new StringBuilder("SELECT DataSeq FROM UnstructuredData WHERE DataUrl = ?");
 		ArrayList<sqlParameterViewModels> sqlParameters = new ArrayList<sqlParameterViewModels>();
 		sqlParameters.add(new sqlParameterViewModels("String", resolveUrl));
-		dataTableViewModels rs = new dbService().deServiceGetResultSet(sqlCommand.toString(), sqlParameters);
-		
-		return false;
+		dataTableViewModels dt = new dbService().deServiceGetResultSet(sqlCommand.toString(), sqlParameters);
+		return dt.DataRows.size() > 0;
 	}
 }
